@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:10.18
+    ports:
+      - 65432:5432
+    environment:
+      - POSTGRES_USER=limesurvey
+      - POSTGRES_PASSWORD=limesurvey
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  limesurvey:
+    build: .
+    ports:
+      - 8082:80
+    environment:
+      LIMESURVEY_DB_HOST: postgres
+      LIMESURVEY_DB_USER: limesurvey
+      LIMESURVEY_DB_PASSWORD: limesurvey
+      LIMESURVEY_ADMIN_USER: admin
+      LIMESURVEY_ADMIN_PASSWORD: admin
+      LIMESURVEY_ADMIN_NAME: Lime Administrator
+      LIMESURVEY_ADMIN_EMAIL: lime@lime.lime
+      DB_TYPE: POSTGRES
+    volumes:
+      - limesurvey_plugins:/var/www/html/plugins
+      - limesurvey_upload:/var/www/html/upload
+      - limesurvey_config:/var/www/html/application/config
+
+volumes:
+  postgres_data:
+  limesurvey_plugins:
+  limesurvey_upload:
+  limesurvey_config:
